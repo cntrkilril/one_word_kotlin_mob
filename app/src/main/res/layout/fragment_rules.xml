@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RulesFragment">
+
+    <TextView
+        android:id="@+id/titleAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:text="Об игре"
+        android:textColor="@color/black"
+        android:textSize="@dimen/h2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/aboutText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:text="Приветсвую тебя в игре 'One Word'. Данная игра является разработкой Шальнова Кирилл (@cntrkilril)"
+        android:textSize="@dimen/defaultText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleAbout" />
+
+    <TextView
+        android:id="@+id/titleRules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Правила"
+        android:textColor="@color/black"
+        android:textSize="@dimen/h3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/aboutText" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/blockRules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleRules">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8sp"
+            android:gravity="center">
+
+
+            <TextView
+                android:layout_width="35sp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:background="@color/main_green"
+                android:gravity="center"
+                android:paddingVertical="5sp"
+                android:text="C"
+                android:textColor="@color/white"
+                android:textSize="@dimen/h3" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:text="- такая буква стоит на правильном месте"
+                android:textSize="@dimen/defaultText" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8sp"
+            android:gravity="center">
+
+
+            <TextView
+                android:layout_width="35sp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:background="@color/main_yellow"
+                android:gravity="center"
+                android:paddingVertical="5sp"
+                android:text="E"
+                android:textColor="@color/white"
+                android:textSize="@dimen/h3" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:text="- такая буква есть в слове, но стоит на другом месте"
+                android:textSize="@dimen/defaultText" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8sp"
+            android:gravity="center">
+
+
+            <TextView
+                android:layout_width="35sp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5sp"
+                android:background="@color/gray"
+                android:gravity="center"
+                android:paddingVertical="5sp"
+                android:text="N"
+                android:textColor="@color/white"
+                android:textSize="@dimen/h3" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:text="- такой буквы нет в слове"
+                android:textSize="@dimen/defaultText" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
