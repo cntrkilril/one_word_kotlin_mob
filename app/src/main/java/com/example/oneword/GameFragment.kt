@@ -19,6 +19,14 @@ class GameFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter = WordsAdapter()
 
+    lateinit var wordInput: EditText
+    lateinit var checkButton: Button
+    lateinit var finishButton: Button
+    lateinit var titleGameText: TextView
+
+    var winFlag = false
+    var resWord = ""
+    var level = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,75 +38,95 @@ class GameFragment : Fragment() {
         val startTime = Date().time
         var countTime = Date().time
 
-        var winFlag = false
-
-        binding.wordList.layoutManager = LinearLayoutManager(binding.root.context)
-        binding.wordList.adapter = adapter
-
-        val wordInput: EditText = binding.wordInput
-        val checkButton: Button = binding.checkButton
-        val finishButton: Button = binding.finishButton
-        val titleGameText: TextView = binding.titleGame
-
-        val resWord = (activity.let { (it as MainActivity).resWord }).uppercase()
-
-        wordInput.setHint("Введите слово из ${((activity?.let { (it as MainActivity).currentLevel }).toString())} букв")
+        init()
+        setResWord()
+        setLevel()
+        setHintInInput("Введите слово из $level букв")
 
         checkButton.setOnClickListener {
-            val wordInputText = wordInput.text.split("").slice(1..wordInput.text.length)
-//          валидация слова
-            if (" " !in wordInputText && wordInputText.size == resWord.length) {
-                var word = arrayListOf<LetterClass>()
-//              проверка на "точное попадание"
-                if (wordInput.text.toString().uppercase() == resWord) {
-                    for (letter in wordInputText) {
-                        word.add(LetterClass(letter.uppercase(), "correct"))
-                        countTime = Date().time - startTime
-                        titleGameText.text = "Победа! Время: ${
-                            String.format("%.2f", countTime.toDouble() / 1000 / 60)
-                        } мин"
-                        wordInput.isEnabled = false
-                        checkButton.isEnabled = false
-                        finishButton.isVisible = true
-                        winFlag = true
-                    }
-                } else {
-//                  обработка букв
-                    word = Utils().processWord(wordInputText, resWord)
-                    activity.let {
-                        (it as MainActivity).showMessage("")
-                    }
-                }
-                wordInput.setText("")
-                adapter.add(word)
-            } else {
-                activity.let {
-                    (it as MainActivity).showMessage("Неправильный ввод")
-                }
-                wordInput.setText("")
-            }
+            checkWord(startTime)
         }
 
         finishButton.setOnClickListener {
-            if (!winFlag) {
-                countTime = Date().time - startTime
-            }
-            activity.let {
-                (it as MainActivity).goToMainFragment()
-                it.showMessage("")
-                it.addToStory(
-                    ResultGame(
-                        winFlag,
-                        resWord,
-                        adapter.itemCount,
-                        countTime.toDouble() / 1000 / 60
-                    )
-                )
-            }
+            finishGame(winFlag, startTime)
         }
 
 
         return view
+    }
+
+    fun init() {
+        binding.wordList.layoutManager = LinearLayoutManager(binding.root.context)
+        binding.wordList.adapter = adapter
+        wordInput = binding.wordInput
+        checkButton = binding.checkButton
+        finishButton = binding.finishButton
+        titleGameText = binding.titleGame
+    }
+
+    fun setResWord() {
+        resWord = (activity.let { (it as MainActivity).resWord }).uppercase()
+    }
+
+    fun setLevel() {
+        level = ((activity?.let { (it as MainActivity).currentLevel }).toString())
+    }
+
+    fun setHintInInput(value: String) {
+        wordInput.setHint(value)
+    }
+
+    fun finishGame(winFlag: Boolean, startTime: Long) {
+        var countTime: Long = 0
+        if (!winFlag) {
+            countTime = Date().time - startTime
+        }
+        activity.let {
+            (it as MainActivity).goToMainFragment()
+            it.showMessage(getString(R.string.empty_text))
+            it.addToStory(
+                ResultGame(
+                    winFlag,
+                    resWord,
+                    adapter.itemCount,
+                    countTime.toDouble() / 1000 / 60
+                )
+            )
+        }
+    }
+
+    fun checkWord(startTime: Long) {
+        val wordInputText = wordInput.text.split("").slice(1..wordInput.text.length)
+//          валидация слова
+        if (" " !in wordInputText && wordInputText.size == resWord.length) {
+            var word = arrayListOf<LetterClass>()
+//              проверка на "точное попадание"
+            if (wordInput.text.toString().uppercase() == resWord) {
+                for (letter in wordInputText) {
+                    word.add(LetterClass(letter.uppercase(), StatusLetterType.CORRECT))
+                    titleGameText.text = "Победа! Время: ${
+                        String.format("%.2f", (Date().time - startTime).toDouble() / 1000 / 60)
+                    } мин"
+                    wordInput.isEnabled = false
+                    checkButton.isEnabled = false
+                    finishButton.isVisible = true
+                    winFlag = true
+                }
+            } else {
+//                  обработка букв
+                word = activity.let { (it as MainActivity).processWord(wordInputText) }
+                activity.let {
+                    (it as MainActivity).showMessage(getString(R.string.empty_text))
+                }
+            }
+            wordInput.setText(getString(R.string.empty_text))
+            adapter.add(word)
+        } else {
+            activity.let {
+                (it as MainActivity).showMessage(getString(R.string.wrong_input))
+            }
+            wordInput.setText("")
+        }
     }
 
     companion object {

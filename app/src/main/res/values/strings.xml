@@ -3,4 +3,34 @@
     <string name="title_name">ONE Word</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wrong_input">Неправильный ввод</string>
+    <string name="empty_text" />
+    <string name="non_empty_fields_message">Нужно заполнить оба поля</string>
+    <string name="bad_login_or_password_message">Неправильный логин или пароль</string>
+    <string name="login_error_message">Ошибка при выходе</string>
+    <string name="succes_register_message">Вы зарегистрированы! Войдите в приложение</string>
+    <string name="login_already_exist_message">Пользователь с таким логином уже существует</string>
+    <string name="warning_backroll_message">Если вы выйдите, игра не будет учитана в общем прогрессе. Нажмите еще раз для выхода</string>
+    <string name="empty_story_message">История пока пуста</string>
+    <string name="check_res">Проверить</string>
+    <string name="complete_game">Завершить</string>
+    <string name="input_login">Введите логин</string>
+    <string name="input_password">Введите пароль</string>
+    <string name="login">Вход</string>
+    <string name="register">Регистрация</string>
+    <string name="about_title">Об игре</string>
+    <string name="story_title">История игр</string>
+    <string name="logout">Выйти</string>
+    <string name="text_main">Выберите сложность и начните играть!</string>
+    <string name="hard_level">4 буквы</string>
+    <string name="medium_level">5 букв</string>
+    <string name="easy_level">6 букв</string>
+    <string name="hello_about">Приветсвую тебя в игре \'One Word\'. Данная игра является разработкой Шальнова Кирилл (@cntrkilril)</string>
+    <string name="rules_title">Правила</string>
+    <string name="correct_status_description">- такая буква стоит на правильном месте</string>
+    <string name="exist_status_description">- такая буква есть в слове, но стоит на другом месте</string>
+    <string name="not_exist_status_description">- такой буквы нет в слове</string>
+    <string name="not_exist_letter">N</string>
+    <string name="exist_letter">E</string>
+    <string name="correct_letter">C</string>
 </resources>

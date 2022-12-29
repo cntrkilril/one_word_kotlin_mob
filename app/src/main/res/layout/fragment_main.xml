@@ -10,7 +10,7 @@
         android:id="@+id/aboutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Об игре"
+        android:text="@string/about_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:layout_marginEnd="5sp"
-            android:text="История игр">
+            android:text="@string/story_title">
 
         </Button>
 
@@ -40,7 +40,7 @@
             android:layout_columnWeight="1"
             android:layout_marginStart="5sp"
             android:backgroundTint="@color/main_red"
-            android:text="Выйти">
+            android:text="@string/logout">
 
         </Button>
 
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Выберите сложность и начните играть!"
+        android:text="@string/text_main"
         android:textColor="@color/black"
         android:textSize="@dimen/h3"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,21 +69,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main_red"
-            android:text="4 буквы" />
+            android:text="@string/hard_level" />
 
         <Button
             android:id="@+id/mediumLevelButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main_yellow"
-            android:text="5 букв" />
+            android:text="@string/medium_level" />
 
         <Button
             android:id="@+id/easyLevelButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main_green"
-            android:text="6 букв" />
+            android:text="@string/easy_level" />
 
     </LinearLayout>
 

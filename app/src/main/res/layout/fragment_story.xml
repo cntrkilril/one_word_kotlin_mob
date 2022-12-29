@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="8dp"
-        android:text="История игр"
+        android:text="@string/story_title"
         android:textColor="@color/black"
         android:textSize="@dimen/h2"
         app:layout_constraintStart_toStartOf="parent"

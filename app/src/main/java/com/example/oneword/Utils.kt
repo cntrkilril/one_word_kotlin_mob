@@ -13,12 +13,12 @@ class Utils {
             val letter = word[position].uppercase()
             if (letter in resWords) {
                 if (letter == resWords[position].toString()) {
-                    res.add(LetterClass(letter, "correct"))
+                    res.add(LetterClass(letter, StatusLetterType.CORRECT))
                 } else {
-                    res.add(LetterClass(letter, "exist"))
+                    res.add(LetterClass(letter, StatusLetterType.EXIST))
                 }
             } else {
-                res.add(LetterClass(letter, "not exist"))
+                res.add(LetterClass(letter, StatusLetterType.NOT_EXIST))
             }
         }
         return res

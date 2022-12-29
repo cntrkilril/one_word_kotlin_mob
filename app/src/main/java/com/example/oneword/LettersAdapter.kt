@@ -7,20 +7,31 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.oneword.databinding.LetterItemBinding
 
-class LettersAdapter(var letters: List<LetterClass>) :
+class LettersAdapter(var letter: List<LetterClass>) :
     RecyclerView.Adapter<LettersAdapter.LetterHolder>() {
 
-    val letterList = letters
+    var letterList = letter
 
     class LetterHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val binding = LetterItemBinding.bind(item)
+        private val binding = LetterItemBinding.bind(item)
         fun bind(letter: LetterClass) {
             binding.letterText.text = letter.letter
             when (letter.status) {
-                "correct" -> binding.letterText.setBackgroundColor(Color.parseColor("#3AA52E"))
-                "exist" -> binding.letterText.setBackgroundColor(Color.parseColor("#A1A52E"))
-                "not exist" -> binding.letterText.setBackgroundColor(Color.parseColor("#424242"))
-                else -> return
+                StatusLetterType.CORRECT -> binding.letterText.setBackgroundColor(
+                    itemView.context.resources.getColor(
+                        R.color.main_green
+                    )
+                )
+                StatusLetterType.EXIST -> binding.letterText.setBackgroundColor(
+                    itemView.context.resources.getColor(
+                        R.color.main_yellow
+                    )
+                )
+                StatusLetterType.NOT_EXIST -> binding.letterText.setBackgroundColor(
+                    itemView.context.resources.getColor(
+                        R.color.gray
+                    )
+                )
             }
         }
     }
@@ -37,10 +48,5 @@ class LettersAdapter(var letters: List<LetterClass>) :
     override fun getItemCount(): Int {
         return letterList.size
     }
-
-//    fun addAll(letters: ArrayList<String>) {
-//        letterList.clear()
-//        letterList.addAll(letters)
-//    }
 
 }

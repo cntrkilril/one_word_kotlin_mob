@@ -34,8 +34,8 @@ class LoginFragment : Fragment() {
                     passwordInput.text.toString()
                 )
             }
-            loginInput.setText("")
-            passwordInput.setText("")
+            loginInput.setText(getString(R.string.empty_text))
+            passwordInput.setText(getString(R.string.empty_text))
         }
 
         registerButton.setOnClickListener {
@@ -44,8 +44,8 @@ class LoginFragment : Fragment() {
                     loginInput.text.toString(),
                     passwordInput.text.toString()
                 )
-                loginInput.setText("")
-                passwordInput.setText("")
+                loginInput.setText(getString(R.string.empty_text))
+                passwordInput.setText(getString(R.string.empty_text))
             }
         }
 

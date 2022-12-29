@@ -29,7 +29,7 @@ class StoryFragment : Fragment() {
         adapter.addAll(story)
 
         if (story.size == 0) {
-            activity.let { (it as MainActivity).showMessage("История пока пуста") }
+            activity.let { (it as MainActivity).showMessage(getString(R.string.empty_story_message)) }
         }
 
         return view

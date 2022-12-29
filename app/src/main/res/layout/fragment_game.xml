@@ -6,54 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".GameFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/titleBlock"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/titleGame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:text="Время началось! Удачи!"
+        android:textColor="@color/black"
+        android:textSize="@dimen/h3"
+        app:layout_constraintEnd_toStartOf="@id/finishButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:backgroundTint="@color/main_red"
+        android:text="@string/complete_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/titleGame"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:text="Время началось! Удачи!"
-            android:textColor="@color/black"
-            android:textSize="@dimen/h3"
-            app:layout_constraintEnd_toStartOf="@id/finishButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/finishButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/main_red"
-            android:text="Завершить"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/actionBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/titleBlock">
+        app:layout_constraintTop_toBottomOf="@id/finishButton">
 
         <EditText
             android:id="@+id/wordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="" />
+            android:hint="@string/empty_text" />
 
         <Button
             android:id="@+id/checkButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/main_green"
-            android:text="Проверить" />
+            android:text="@string/check_res" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

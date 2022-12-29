@@ -12,7 +12,7 @@
         android:background="@color/main_green"
         android:gravity="center"
         android:paddingVertical="5sp"
-        android:text=""
+        android:text="@string/empty_text"
         android:textColor="@color/white"
         android:textSize="@dimen/h3"
         app:layout_constraintStart_toStartOf="parent"

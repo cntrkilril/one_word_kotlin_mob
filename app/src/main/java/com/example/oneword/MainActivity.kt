@@ -9,15 +9,11 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var currentFragment: String = "login"
+    private var currentFragment: FragmentType = FragmentType.LOGIN
+    private val api: MyApi = MyApiImpl()
 
-    private val users: ArrayList<User> = arrayListOf(User("admin", "admin"))
-    private val levels: ArrayList<Int> = arrayListOf(4, 5, 6)
-    private val words: ArrayList<ArrayList<String>> = Words().list
-
-    var currentUser: User? = null
-    var currentLevel: Int = 0
-    var storyList: ArrayList<Story> = arrayListOf()
+    private var currentUser: User? = null
+    var currentLevel: String = ""
     var resWord: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,78 +29,79 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun login(login: String, password: String) {
-        if (login == "" || password == "") {
-            showMessage("Нужно заполнить оба поля")
-            return
-        }
-        for (user in users) {
-            if (user.login == login && user.password == password) {
-                currentUser = User(password, login)
-                goToMainFragment()
-                showMessage("")
-                return
-            }
-        }
-        showMessage("Неправильный логин или пароль")
-    }
 
     fun showMessage(text: String) {
         binding.message.text = text
     }
 
+    fun login(login: String, password: String) {
+        if (login == "" || password == "") {
+            showMessage(getString(R.string.non_empty_fields_message))
+            return
+        }
+        val user: User? = api.login(login, password)
+        if (user == null) {
+            showMessage(getString(R.string.bad_login_or_password_message))
+        } else {
+            currentUser = user
+            goToMainFragment()
+            showMessage(getString(R.string.empty_text))
+        }
+    }
+
     fun logout() {
-        goToLoginFragment()
-        currentUser = null
+        val user = currentUser
+        if (user !== null) {
+            if (api.logout(user.login)) {
+                goToLoginFragment()
+                showMessage(getString(R.string.empty_text))
+                currentUser = null
+            } else {
+                showMessage(getString(R.string.login_error_message))
+            }
+        }
     }
 
     fun register(login: String, password: String) {
         if (login == "" || password == "") {
-            showMessage("Нужно заполнить оба поля")
+            showMessage(getString(R.string.non_empty_fields_message))
             return
         }
-        for (user in users) {
-            if (user.login == login) {
-                showMessage("Пользователь с таким логином уже существует")
-                return
-            }
+        if (api.register(login, password)) {
+            showMessage(getString(R.string.succes_register_message))
+        } else {
+            showMessage(getString(R.string.login_already_exist_message))
         }
-        users.add(User(password, login))
-        showMessage("Вы зарегистрированы! Войдите в приложение")
     }
 
     fun addToStory(resultGame: ResultGame) {
-        for (story in storyList) {
-            if (story.user.login == currentUser?.login) {
-                story.resultsGames.add(resultGame)
-                return
-            }
-        }
-        if (currentUser !== null) {
-            storyList.add(Story(currentUser!!, arrayListOf(resultGame)))
+        val user = currentUser
+        if (user !== null) {
+            api.addToStory(user, resultGame)
         }
     }
 
     fun getStoryByCurrentUser(): ArrayList<ResultGame> {
-        if (currentUser !== null) {
-            for (story in storyList) {
-                if (story.user.login == currentUser!!.login) {
-                    return story.resultsGames
-                }
-            }
+        val user = currentUser
+        if (user !== null) {
+            return api.getStoryByUser(user)
         }
         return arrayListOf()
     }
 
+    fun processWord(wordInputText: List<String>): ArrayList<LetterClass> {
+        return api.processWord(wordInputText, resWord)
+    }
+
     override fun onBackPressed() {
-        if (currentFragment == "game") {
+        if (currentFragment == FragmentType.GAME) {
             val snack = Snackbar.make(
                 this.binding.root,
-                "Если вы выйдите, игра не будет учитана в общем прогрессе. Нажмите еще раз для выхода",
+                getString(R.string.warning_backroll_message),
                 Snackbar.LENGTH_LONG
             )
             snack.show()
-            currentFragment = "game2"
+            currentFragment = FragmentType.GAME2
         } else {
             super.onBackPressed()
         }
@@ -115,27 +112,27 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.commit {
             replace(binding.frameFragments.id, MainFragment.newInstance())
         }
-        currentFragment = "main"
+        currentFragment = FragmentType.MAIN
     }
 
     fun goToLoginFragment() {
         supportFragmentManager.commit {
             replace(binding.frameFragments.id, LoginFragment.newInstance())
         }
-        currentFragment = "login"
+        currentFragment = FragmentType.LOGIN
     }
 
     fun goToGameFragment(indexOfLevel: Int) {
 
-        resWord = Utils().randomWord(words[indexOfLevel])
-        currentLevel = levels[indexOfLevel]
+        resWord = api.getResWords(indexOfLevel)
+        currentLevel = api.getLevel(indexOfLevel)
 
         supportFragmentManager.commit {
             replace(binding.frameFragments.id, GameFragment.newInstance())
             addToBackStack("main")
         }
 
-        currentFragment = "game"
+        currentFragment = FragmentType.GAME
     }
 
     fun goToAboutFragment() {
@@ -143,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             replace(binding.frameFragments.id, RulesFragment.newInstance())
             addToBackStack("main")
         }
-        currentFragment = "about"
+        currentFragment = FragmentType.ABOUT
     }
 
     fun goToStoryFragment() {
@@ -151,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             replace(binding.frameFragments.id, StoryFragment.newInstance())
             addToBackStack("main")
         }
-        currentFragment = "story"
+        currentFragment = FragmentType.STORY
     }
 
 }

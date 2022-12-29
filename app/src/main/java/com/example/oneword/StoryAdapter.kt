@@ -10,10 +10,10 @@ import com.example.oneword.databinding.StoryItemBinding
 class StoryAdapter() :
     RecyclerView.Adapter<StoryAdapter.StoryHolder>() {
 
-    val resultsList = arrayListOf<ResultGame>()
+    private val resultsList = arrayListOf<ResultGame>()
 
     class StoryHolder(item: View) : RecyclerView.ViewHolder(item) {
-        val binding = StoryItemBinding.bind(item)
+        private val binding = StoryItemBinding.bind(item)
         fun bind(result: ResultGame) {
             binding.countAttemptsText.text = "Попыток: " + result.countAttempts.toString()
             binding.timeText.text = String.format("%.2f", result.countTime) + " мин"
