@@ -19,43 +19,42 @@ class GameFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter = WordsAdapter()
 
-    lateinit var wordInput: EditText
-    lateinit var checkButton: Button
-    lateinit var finishButton: Button
-    lateinit var titleGameText: TextView
+    private var _model: GameViewModel? = null
+    private val model get() = _model!!
 
-    var winFlag = false
-    var resWord = ""
-    var level = ""
+    private lateinit var wordInput: EditText
+    private lateinit var checkButton: Button
+    private lateinit var finishButton: Button
+    private lateinit var titleGameText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
+        _model =
+            GameViewModel(
+                (activity.let { (it as MainActivity).getResWord() })?.uppercase() ?: "",
+                (activity.let { (it as MainActivity).getCurrentLevel() })?.uppercase() ?: ""
+            )
         val view: View = binding.root
 
-        val startTime = Date().time
-        var countTime = Date().time
-
         init()
-        setResWord()
-        setLevel()
-        setHintInInput("Введите слово из $level букв")
+        setHintInInput("Введите слово из ${model.level.value} букв")
 
         checkButton.setOnClickListener {
-            checkWord(startTime)
+            checkWord()
         }
 
         finishButton.setOnClickListener {
-            finishGame(winFlag, startTime)
+            finishGame()
         }
 
 
         return view
     }
 
-    fun init() {
+    private fun init() {
         binding.wordList.layoutManager = LinearLayoutManager(binding.root.context)
         binding.wordList.adapter = adapter
         wordInput = binding.wordInput
@@ -64,73 +63,57 @@ class GameFragment : Fragment() {
         titleGameText = binding.titleGame
     }
 
-    fun setResWord() {
-        resWord = (activity.let { (it as MainActivity).resWord }).uppercase()
-    }
-
-    fun setLevel() {
-        level = ((activity?.let { (it as MainActivity).currentLevel }).toString())
-    }
-
-    fun setHintInInput(value: String) {
+    private fun setHintInInput(value: String) {
         wordInput.setHint(value)
     }
 
-    fun finishGame(winFlag: Boolean, startTime: Long) {
-        var countTime: Long = 0
-        if (!winFlag) {
-            countTime = Date().time - startTime
-        }
+    private fun finishGame() {
+        val result = model.finishGame()
         activity.let {
             (it as MainActivity).goToMainFragment()
             it.showMessage(getString(R.string.empty_text))
-            it.addToStory(
-                ResultGame(
-                    winFlag,
-                    resWord,
-                    adapter.itemCount,
-                    countTime.toDouble() / 1000 / 60
+            if (result != null) {
+                it.addToStory(
+                    ResultGame(
+                        result.winFlag,
+                        result.resWord,
+                        adapter.itemCount,
+                        result.time
+                    )
                 )
-            )
+            }
         }
     }
 
-    fun checkWord(startTime: Long) {
-        val wordInputText = wordInput.text.split("").slice(1..wordInput.text.length)
-//          валидация слова
-        if (" " !in wordInputText && wordInputText.size == resWord.length) {
-            var word = arrayListOf<LetterClass>()
-//              проверка на "точное попадание"
-            if (wordInput.text.toString().uppercase() == resWord) {
-                for (letter in wordInputText) {
-                    word.add(LetterClass(letter.uppercase(), StatusLetterType.CORRECT))
-                    titleGameText.text = "Победа! Время: ${
-                        String.format("%.2f", (Date().time - startTime).toDouble() / 1000 / 60)
-                    } мин"
-                    wordInput.isEnabled = false
-                    checkButton.isEnabled = false
-                    finishButton.isVisible = true
-                    winFlag = true
-                }
-            } else {
-//                  обработка букв
-                word = activity.let { (it as MainActivity).processWord(wordInputText) }
-                activity.let {
-                    (it as MainActivity).showMessage(getString(R.string.empty_text))
-                }
-            }
-            wordInput.setText(getString(R.string.empty_text))
-            adapter.add(word)
-        } else {
+    private fun checkWord() {
+        if (wordInput.text.toString() == "" || wordInput.text.length != model.resWord.value?.length) {
             activity.let {
                 (it as MainActivity).showMessage(getString(R.string.wrong_input))
             }
             wordInput.setText("")
         }
+        val checkRes = model.checkWord(wordInput.text.toString())
+        if (checkRes != null) {
+            if (checkRes.status == StatusCheckWord.WIN) {
+                "Победа! Время: ${
+                    String.format("%.2f", checkRes.time)
+                } мин".also { titleGameText.text = it }
+                wordInput.isEnabled = false
+                checkButton.isEnabled = false
+                finishButton.isVisible = true
+            } else {
+                activity.let {
+                    (it as MainActivity).showMessage(getString(R.string.empty_text))
+                }
+            }
+        }
+        wordInput.setText(getString(R.string.empty_text))
+        if (checkRes != null) {
+            adapter.add(checkRes.word)
+        }
     }
 
     companion object {
-
         fun newInstance() = GameFragment()
     }
 }

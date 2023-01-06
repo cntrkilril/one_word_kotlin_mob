@@ -10,11 +10,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var currentFragment: FragmentType = FragmentType.LOGIN
+    private val model = MainActivityViewModel()
     private val api: MyApi = MyApiImpl()
-
-    private var currentUser: User? = null
-    var currentLevel: String = ""
-    var resWord: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +19,15 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        if (currentUser == null) {
-            goToLoginFragment()
-        } else {
-            goToMainFragment()
+        model.currentUser.observe(this) { newUser ->
+            if (newUser == null) {
+                goToLoginFragment()
+            } else {
+                showMessage(getString(R.string.empty_text))
+                goToMainFragment()
+            }
         }
     }
-
 
     fun showMessage(text: String) {
         binding.message.text = text
@@ -39,27 +38,14 @@ class MainActivity : AppCompatActivity() {
             showMessage(getString(R.string.non_empty_fields_message))
             return
         }
-        val user: User? = api.login(login, password)
-        if (user == null) {
+        val loginCheck = model.login(login, password)
+        if (!loginCheck) {
             showMessage(getString(R.string.bad_login_or_password_message))
-        } else {
-            currentUser = user
-            goToMainFragment()
-            showMessage(getString(R.string.empty_text))
         }
     }
 
     fun logout() {
-        val user = currentUser
-        if (user !== null) {
-            if (api.logout(user.login)) {
-                goToLoginFragment()
-                showMessage(getString(R.string.empty_text))
-                currentUser = null
-            } else {
-                showMessage(getString(R.string.login_error_message))
-            }
-        }
+        model.logout()
     }
 
     fun register(login: String, password: String) {
@@ -67,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             showMessage(getString(R.string.non_empty_fields_message))
             return
         }
-        if (api.register(login, password)) {
+        if (model.register(login, password)) {
             showMessage(getString(R.string.succes_register_message))
         } else {
             showMessage(getString(R.string.login_already_exist_message))
@@ -75,22 +61,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addToStory(resultGame: ResultGame) {
-        val user = currentUser
-        if (user !== null) {
-            api.addToStory(user, resultGame)
-        }
+        model.addToStory(resultGame)
     }
 
-    fun getStoryByCurrentUser(): ArrayList<ResultGame> {
-        val user = currentUser
-        if (user !== null) {
-            return api.getStoryByUser(user)
-        }
-        return arrayListOf()
+    fun getCurrentUser(): User? {
+        return model.currentUser.value
     }
 
-    fun processWord(wordInputText: List<String>): ArrayList<LetterClass> {
-        return api.processWord(wordInputText, resWord)
+    fun getCurrentLevel(): String? {
+        return model.currentLevel.value
+    }
+
+    fun getResWord(): String? {
+        return model.resWord.value
     }
 
     override fun onBackPressed() {
@@ -124,8 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     fun goToGameFragment(indexOfLevel: Int) {
 
-        resWord = api.getResWords(indexOfLevel)
-        currentLevel = api.getLevel(indexOfLevel)
+        model.startGame(indexOfLevel)
 
         supportFragmentManager.commit {
             replace(binding.frameFragments.id, GameFragment.newInstance())
