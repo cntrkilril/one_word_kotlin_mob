@@ -1,13 +1,12 @@
 package com.example.oneword
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.oneword.databinding.StoryItemBinding
 
-class StoryAdapter() :
+class StoryAdapter :
     RecyclerView.Adapter<StoryAdapter.StoryHolder>() {
 
     private val resultsList = arrayListOf<ResultGame>()
@@ -19,9 +18,9 @@ class StoryAdapter() :
             binding.timeText.text = String.format("%.2f", result.countTime) + " мин"
             binding.wordText.text = result.word
             if (result.status) {
-                binding.storyItem.setBackgroundColor(Color.parseColor("#3AA52E"))
+                binding.storyItem.setBackgroundColor(itemView.context.resources.getColor(R.color.main_green))
             } else {
-                binding.storyItem.setBackgroundColor(Color.parseColor("#A52E2E"))
+                binding.storyItem.setBackgroundColor(itemView.context.resources.getColor(R.color.main_red))
             }
         }
     }
